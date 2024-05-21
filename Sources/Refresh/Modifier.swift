@@ -35,7 +35,10 @@ extension Refresh {
 extension Refresh.Modifier: ViewModifier {
     
     func body(content: Content) -> some View {
-        return GeometryReader { proxy in
+        guard self.isEnabled else {
+            return AnyView(content)
+        }
+        return AnyView(GeometryReader { proxy in
             content
                 .environment(\.refreshHeaderUpdate, self.headerUpdate)
                 .environment(\.refreshFooterUpdate, self.footerUpdate)
@@ -50,7 +53,7 @@ extension Refresh.Modifier: ViewModifier {
                     return Color.clear
                 }
                 .id(self.id)
-        }
+        })
     }
     
     func update(proxy: GeometryProxy, value: Refresh.HeaderAnchorKey.Value) {
