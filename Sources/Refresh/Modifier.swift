@@ -77,6 +77,13 @@ extension Refresh.Modifier: ViewModifier {
         } else {
             update.refresh = update.refresh || (headerPreviousProgress > 1 && update.progress < headerPreviousProgress && update.progress >= 1)
         }
+        if update.progress > 1 && !update.impactFeedback {
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            update.impactFeedback = true
+        }
+        if !update.refresh && update.progress == 0 {
+            update.impactFeedback = false
+        }
         
         headerUpdate = update
         headerPadding = headerUpdate.refresh ? 0 : -max(rowHeight, bounds.height)

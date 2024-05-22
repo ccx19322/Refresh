@@ -50,5 +50,6 @@ extension Refresh.HeaderUpdateKey: EnvironmentKey {
         let enable: Bool
         var progress: CGFloat = 0
         var refresh: Bool = false
+        var impactFeedback: Bool = false
     }
 }
