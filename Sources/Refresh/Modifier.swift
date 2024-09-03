@@ -20,6 +20,7 @@ extension Refresh {
         
         @State private var footerUpdate: FooterUpdateKey.Value
         @State private var footerPreviousRefreshAt: Date?
+        @State private var footerMinY: CGFloat = 0
         
         init(enable: Bool) {
             isEnabled = enable
@@ -83,6 +84,9 @@ extension Refresh.Modifier: ViewModifier {
         }
         if !update.refresh && update.progress == 0 {
             update.impactFeedback = false
+            if footerMinY < proxy.size.height {
+                footerPreviousRefreshAt = Date()
+            }
         }
         
         headerUpdate = update
@@ -102,7 +106,10 @@ extension Refresh.Modifier: ViewModifier {
         } else if update.refresh && !item.refreshing {
             update.refresh = false
         } else {
-            update.refresh = proxy.size.height - bounds.minY + item.preloadOffset > 0
+            update.refresh = (proxy.size.height - bounds.minY + item.preloadOffset > 0) && (footerMinY > bounds.minY && bounds.minY < proxy.size.height)
+            if !update.refresh && bounds.minY > proxy.size.height && proxy.size.height - bounds.minY + item.preloadOffset > 0 {
+                update.refresh = true
+            }
         }
         
         if update.refresh, !footerUpdate.refresh {
@@ -113,5 +120,6 @@ extension Refresh.Modifier: ViewModifier {
         }
         
         footerUpdate = update
+        footerMinY = bounds.minY
     }
 }
