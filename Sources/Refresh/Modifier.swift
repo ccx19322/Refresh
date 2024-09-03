@@ -101,9 +101,7 @@ extension Refresh.Modifier: ViewModifier {
         let bounds = proxy[item.bounds]
         var update = footerUpdate
         
-        if bounds.minY <= rowHeight || bounds.minY <= bounds.height {
-            update.refresh = false
-        } else if update.refresh && !item.refreshing {
+        if update.refresh && !item.refreshing {
             update.refresh = false
         } else {
             update.refresh = (proxy.size.height - bounds.minY + item.preloadOffset > 0) && (footerMinY > bounds.minY && bounds.minY < proxy.size.height)
